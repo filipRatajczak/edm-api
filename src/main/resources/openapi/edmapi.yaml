@@ -1,0 +1,412 @@
+openapi: "3.0.0"
+info:
+  title: EDM APi documentation
+  version: 3.0.0
+paths:
+  /api/v1/login:
+    post:
+      tags:
+        - Authentication
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationToken'
+
+  /api/v1/employees:
+    get:
+      tags:
+        - Employees
+      summary: Return list of employees
+      description: Return list of all employees
+      operationId: employeesGet
+      responses:
+        '200':
+          description: An array of employees in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeViewDto'
+    post:
+      tags:
+        - Employees
+      operationId: employeesPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDto'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeViewDto'
+
+  /api/v1/employees/{employeeCode}:
+    get:
+      tags:
+        - Employees
+      operationId: getByEmployeeCode
+      summary: Return an employee
+      description: Returns an employee with given employeeCode.
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      responses:
+        '200':
+          description: An employee in JSON format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeViewDto'
+    put:
+      tags:
+        - Employees
+      operationId: updateByEmployeeCode
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDto'
+      responses:
+        '200':
+          description: The request has succeeded and a new resource has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeViewDto'
+
+    delete:
+      tags:
+        - Employees
+      operationId: deleteByEmployeeCode
+      summary: Delete employee
+      description: Delete employee with given employeeCode.
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      responses:
+        '204':
+          description: The resource was deleted successfully.
+
+  /api/v1/dispositions:
+    get:
+      tags:
+        - Dispositions
+      operationId: dispositionsGet
+      summary: Return list of all dispositions
+      description: Return list of all dispositions
+      responses:
+        '200':
+          description: An array of dispositions in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DispositionDto'
+
+    post:
+      tags:
+        - Dispositions
+      operationId: dispositionsPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DispositionDto'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispositionDto'
+
+  /api/v1/dispositions/{employeeCode}:
+    get:
+      tags:
+        - Dispositions
+      operationId: getDispositionsByEmployeeCode
+      summary: Returns list of disposition
+      description: Returns a disposition with given employeeCode.
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+        - in: query
+          required: true
+          name: from
+          schema:
+            type: string
+            format: date
+          description: From date
+        - in: query
+          required: true
+          name: to
+          schema:
+            type: string
+            format: date
+          description: To date
+      responses:
+        '200':
+          description: An array of dispositions in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DispositionDto'
+
+    put:
+      tags:
+        - Dispositions
+      operationId: updateDisposition
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DispositionDto'
+      responses:
+        '200':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispositionDto'
+
+    delete:
+      tags:
+        - Dispositions
+      operationId: deleteDisposition
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      responses:
+        '204':
+          description: The resource was deleted successfully.
+
+  /api/v1/timeEntries:
+    get:
+      tags:
+        - TimeEntries
+      operationId: timeEntriesGet
+      summary: Return list of all timeEntries
+      description: Return list of all timeEntries
+      responses:
+        '200':
+          description: An array of timeEntries in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeEntryDto'
+
+    post:
+      tags:
+        - TimeEntries
+      operationId: timeEntriesPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeEntryDto'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeEntryDto'
+
+  /api/v1/timeEntries/{employeeCode}:
+    get:
+      tags:
+        - TimeEntries
+      operationId: getTimeEntriesByEmployeeCode
+      summary: Returns list of timeEntries
+      description: Returns a timeEntries with given employeeCode.
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+        - in: query
+          required: true
+          name: from
+          schema:
+            type: string
+            format: date
+          description: From date
+        - in: query
+          required: true
+          name: to
+          schema:
+            type: string
+            format: date
+          description: To date
+      responses:
+        '200':
+          description: An array of dispositions in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeEntryDto'
+
+    put:
+      tags:
+        - TimeEntries
+      operationId: updateTimeEntry
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeEntryDto'
+      responses:
+        '200':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeEntryDto'
+
+    delete:
+      tags:
+        - TimeEntries
+      operationId: deleteTimeEntry
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      responses:
+        '204':
+          description: The resource was deleted successfully.
+
+components:
+  schemas:
+    AuthenticationToken:
+      type: object
+      properties:
+        login:
+          type: string
+        token:
+          type: string
+    UserCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    EmployeeDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+        birthday:
+          type: string
+          format: date
+        role:
+          $ref: '#/components/schemas/Role'
+        password:
+          type: string
+        employeeCode:
+          type: string
+    EmployeeViewDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+        birthday:
+          type: string
+          format: date
+        role:
+          $ref: '#/components/schemas/Role'
+        employeeCode:
+          type: string
+    DispositionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        day:
+          type: string
+          format: date
+        start:
+          type: string
+        stop:
+          type: string
+        employeeCode:
+          type: string
+
+    TimeEntryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        day:
+          type: string
+          format: date
+        start:
+          type: string
+        stop:
+          type: string
+        employeeCode:
+          type: string
+
+    Role:
+      type: string
+      enum:
+        - EMPLOYEE
+        - ADMIN
+
+  parameters:
+    EmployeeCode:
+      name: employeeCode
+      in: path
+      required: true
+      description: The employeeCode given by API consumer.
+      schema:
+        type: string

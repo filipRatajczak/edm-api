@@ -1,7 +1,7 @@
-package com.edm.edmapi.controller;
+package uz.edm.edmapi.controller;
 
 import com.edm.api.EmployeesApi;
-import com.edm.edmapi.service.EmployeeService;
+import uz.edm.edmapi.service.EmployeeService;
 import com.edm.model.dto.EmployeeDto;
 import com.edm.model.dto.EmployeeViewDto;
 import lombok.RequiredArgsConstructor;

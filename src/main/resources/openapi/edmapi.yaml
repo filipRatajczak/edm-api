@@ -42,6 +42,7 @@ paths:
       tags:
         - Employees
       operationId: employeesPost
+      summary: Creates employee
       requestBody:
         required: true
         content:
@@ -76,6 +77,7 @@ paths:
       tags:
         - Employees
       operationId: updateByEmployeeCode
+      summary: Update employee
       parameters:
         - $ref: '#/components/parameters/EmployeeCode'
       requestBody:
@@ -111,6 +113,21 @@ paths:
       operationId: dispositionsGet
       summary: Return list of all dispositions
       description: Return list of all dispositions
+      parameters:
+        - in: query
+          required: false
+          name: from
+          schema:
+            type: string
+            format: date
+          description: From date
+        - in: query
+          required: false
+          name: to
+          schema:
+            type: string
+            format: date
+          description: To date
       responses:
         '200':
           description: An array of dispositions in JSON format
@@ -139,12 +156,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/DispositionDto'
 
+
+
   /api/v1/dispositions/{employeeCode}:
     get:
       tags:
         - Dispositions
       operationId: getDispositionsByEmployeeCode
-      summary: Returns list of disposition
+      summary: Returns disposition
       description: Returns a disposition with given employeeCode.
       parameters:
         - $ref: '#/components/parameters/EmployeeCode'
@@ -171,6 +190,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DispositionDto'
+
+  /api/v1/dispositionsRatio/{employeeCode}:
+    get:
+      tags:
+        - Dispositions
+      operationId: getDispositionRatioByEmployeeCode
+      summary: Returns list of disposition
+      description: Returns a disposition with given employeeCode.
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      responses:
+        '200':
+          description: An dispositionRatioDto in JSON format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispositionRatioDto'
 
     put:
       tags:
@@ -379,7 +415,14 @@ components:
           type: string
         employeeCode:
           type: string
-
+    DispositionRatioDto:
+      type: object
+      properties:
+        employeeCode:
+          type: string
+        ratio:
+          type: number
+          format: double
     TimeEntryDto:
       type: object
       properties:
@@ -410,3 +453,4 @@ components:
       description: The employeeCode given by API consumer.
       schema:
         type: string
+

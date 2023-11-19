@@ -1,10 +1,18 @@
-package com.edm.edmapi.service;
+package uz.edm.edmapi.service;
+
 
 import com.edm.model.dto.EmployeeDto;
 import com.edm.model.dto.EmployeeViewDto;
 import com.edm.model.dto.Role;
 import com.google.protobuf.Empty;
-import gft.edm.grpc.disposition.*;
+import uz.edm.grpc.employee.CreateEmployeeRequest;
+import uz.edm.grpc.employee.DeleteEmployeeRequest;
+import uz.edm.grpc.employee.Employee;
+import uz.edm.grpc.employee.EmployeeServiceGrpc;
+import uz.edm.grpc.employee.Employees;
+import uz.edm.grpc.employee.GetEmployeeByEmailRequest;
+import uz.edm.grpc.employee.GetEmployeeByEmployeeCodeRequest;
+import uz.edm.grpc.employee.UpdateEmployeeRequest;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -12,6 +20,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +30,11 @@ public class EmployeeService {
 
     public void deleteByEmployeeCode(String employeeCode) {
         employeeServiceBlockingStub.deleteEmployee(DeleteEmployeeRequest.newBuilder().setId(employeeCode).build());
+    }
+
+    public Optional<EmployeeDto> getEmployeeByEmail(String email) {
+        Employee employee = employeeServiceBlockingStub.geteEmployeeByEmail(GetEmployeeByEmailRequest.newBuilder().setEmail(email).build());
+        return Optional.of(mapEmployeeToDto(employee));
     }
 
     public List<EmployeeViewDto> employeesGet() {
@@ -66,7 +80,7 @@ public class EmployeeService {
     }
 
     private EmployeeDto mapEmployeeToDto(Employee employee) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate localDate = timeFormatter.parseLocalDate(employee.getBirthday());
         EmployeeDto employeeDto = new EmployeeDto();
         employeeDto.setFirstName(employee.getFirstName());

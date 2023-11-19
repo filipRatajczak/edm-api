@@ -1,4 +1,4 @@
-package com.edm.edmapi;
+package uz.edm.edmapi;
 
 
 import org.springframework.boot.SpringApplication;

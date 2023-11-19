@@ -1,8 +1,15 @@
-package com.edm.edmapi.service;
+package uz.edm.edmapi.service;
 
 import com.edm.model.dto.TimeEntryDto;
 import com.google.protobuf.Empty;
-import gft.edm.grpc.disposition.*;
+
+import uz.edm.grpc.timeentry.TimeEntryServiceGrpc;
+import uz.edm.grpc.timeentry.CreateTimeEntryRequest;
+import uz.edm.grpc.timeentry.DeleteTimeEntryRequest;
+import uz.edm.grpc.timeentry.GetTimeEntryByEmployeeCodeRequest;
+import uz.edm.grpc.timeentry.TimeEntries;
+import uz.edm.grpc.timeentry.TimeEntry;
+import uz.edm.grpc.timeentry.UpdateTimeEntryRequest;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

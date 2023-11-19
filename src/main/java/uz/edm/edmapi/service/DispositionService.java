@@ -1,8 +1,17 @@
-package com.edm.edmapi.service;
+package uz.edm.edmapi.service;
 
 import com.edm.model.dto.DispositionDto;
-import com.google.protobuf.Empty;
-import gft.edm.grpc.disposition.*;
+import com.edm.model.dto.DispositionRatioDto;
+import uz.edm.grpc.disposition.CreateDispositionRequest;
+import uz.edm.grpc.disposition.DeleteDispositionsByIdRequest;
+import uz.edm.grpc.disposition.Disposition;
+import uz.edm.grpc.disposition.DispositionRatio;
+import uz.edm.grpc.disposition.DispositionRatioRequest;
+import uz.edm.grpc.disposition.DispositionServiceGrpc;
+import uz.edm.grpc.disposition.Dispositions;
+import uz.edm.grpc.disposition.GetAllDispositionRequest;
+import uz.edm.grpc.disposition.GetDispositionsByEmployeeCodeRequest;
+import uz.edm.grpc.disposition.UpdateDispositionRequest;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -22,8 +31,13 @@ public class DispositionService {
     }
 
 
-    public List<DispositionDto> dispositionsGet() {
-        Dispositions dispositions = dispositionServiceBlockingStub.getAllDisposition(Empty.getDefaultInstance());
+    public List<DispositionDto> dispositionsGet(LocalDate from, LocalDate to) {
+        Dispositions dispositions = dispositionServiceBlockingStub.getAllDisposition(
+                GetAllDispositionRequest
+                        .newBuilder().
+                        setFrom(from.toString())
+                        .setTo(to.toString())
+                        .build());
         return mapDispositionsToDto(dispositions);
     }
 
@@ -45,6 +59,11 @@ public class DispositionService {
         return mapDispositionToDto(disposition);
     }
 
+    public DispositionRatioDto dispositionRatioDtoGet(String employeeCode) {
+        DispositionRatio dispositionRatio = dispositionServiceBlockingStub.getDispositionRatio(DispositionRatioRequest.newBuilder().setEmployeeCode(employeeCode).build());
+        return mapDispositionRatioToDto(dispositionRatio);
+    }
+
     private Dispositions dispositionsDtoToGrpcFormat(List<DispositionDto> dispositionDtos) {
         List<Disposition> collect = dispositionDtos.stream()
                 .map(this::dispositionDtoToGrpcFormat)
@@ -62,12 +81,12 @@ public class DispositionService {
     }
 
     private DispositionDto mapDispositionToDto(Disposition disposition) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         org.joda.time.LocalDate localDate = timeFormatter.parseLocalDate(disposition.getDay());
         DispositionDto dispositionDto = new DispositionDto();
         dispositionDto.setDay(java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth()));
         dispositionDto.setStart(disposition.getStart());
-        dispositionDto.setStart(disposition.getStop());
+        dispositionDto.stop(disposition.getStop());
         dispositionDto.setEmployeeCode(disposition.getEmployeeCode());
         return dispositionDto;
     }
@@ -77,6 +96,13 @@ public class DispositionService {
                 .stream()
                 .map(this::mapDispositionToDto)
                 .toList();
+    }
+
+    private DispositionRatioDto mapDispositionRatioToDto(DispositionRatio dispositionRatio) {
+        DispositionRatioDto dispositionRatioDto = new DispositionRatioDto();
+        dispositionRatioDto.setRatio(dispositionRatio.getWorkingDispositionRatio());
+        dispositionRatioDto.setEmployeeCode(dispositionRatio.getEmployeeCode());
+        return dispositionRatioDto;
     }
 
 }

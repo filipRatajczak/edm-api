@@ -1,7 +1,7 @@
-package com.edm.edmapi.controller;
+package uz.edm.edmapi.controller;
 
 import com.edm.api.TimeEntriesApi;
-import com.edm.edmapi.service.TimeEntryService;
+import uz.edm.edmapi.service.TimeEntryService;
 import com.edm.model.dto.TimeEntryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

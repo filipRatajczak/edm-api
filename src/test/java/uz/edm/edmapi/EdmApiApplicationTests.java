@@ -1,4 +1,4 @@
-package com.edm.edmapi;
+package uz.edm.edmapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

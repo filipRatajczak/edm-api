@@ -3,6 +3,14 @@ server:
 spring:
   application:
      name: edm-api
+edm:
+  jwt:
+    secret: asdfasdfasdfasdfasdfasdfasdfasdf
+    expiration: 100000000000
+  api:
+    credentials:
+      username: EDM-API@EDM.COM
+      password: EDM-API111
 
 grpc:
   indexer:

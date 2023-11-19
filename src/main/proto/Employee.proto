@@ -1,6 +1,6 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
-package gft.edm.grpc.disposition;
+package uz.edm.grpc.employee;
 
 option java_outer_classname = "EmployeeProto";
 option java_multiple_files = true;
@@ -8,6 +8,7 @@ option java_multiple_files = true;
 service EmployeeService {
   rpc GetEmployeeByEmployeeCode (GetEmployeeByEmployeeCodeRequest) returns (Employee);
   rpc GetAllEmployees (google.protobuf.Empty) returns (Employees);
+  rpc GeteEmployeeByEmail (GetEmployeeByEmailRequest) returns (Employee);
   rpc UpdateEmployee (UpdateEmployeeRequest) returns (Employee);
   rpc CreateEmployee (CreateEmployeeRequest) returns (Employee);
   rpc DeleteEmployee (DeleteEmployeeRequest) returns (google.protobuf.Empty);
@@ -28,6 +29,10 @@ message CreateEmployeeRequest {
 
 message DeleteEmployeeRequest {
   string id = 1;
+}
+
+message GetEmployeeByEmailRequest {
+  string email = 1;
 }
 
 message Employee {

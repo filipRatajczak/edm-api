@@ -66,12 +66,12 @@ public class TimeEntryService {
     }
 
     private TimeEntryDto mapTimeEntryToDto(TimeEntry timeEntry) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         org.joda.time.LocalDate localDate = timeFormatter.parseLocalDate(timeEntry.getDay());
         TimeEntryDto timeEntryDto = new TimeEntryDto();
         timeEntryDto.setDay(java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth()));
         timeEntryDto.setStart(timeEntry.getStart());
-        timeEntryDto.setStart(timeEntry.getStop());
+        timeEntryDto.setStop(timeEntry.getStop());
         timeEntryDto.setEmployeeCode(timeEntry.getEmployeeCode());
         return timeEntryDto;
     }

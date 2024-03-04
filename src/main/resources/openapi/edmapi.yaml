@@ -155,9 +155,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DispositionDto'
-
-
-
   /api/v1/dispositions/{employeeCode}:
     get:
       tags:
@@ -190,6 +187,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DispositionDto'
+    delete:
+      tags:
+        - Dispositions
+      operationId: deleteDisposition
+      parameters:
+        - $ref: '#/components/parameters/EmployeeCode'
+      responses:
+        '204':
+          description: The resource was deleted successfully.
 
   /api/v1/dispositionsRatio/{employeeCode}:
     get:
@@ -207,7 +213,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DispositionRatioDto'
-
     put:
       tags:
         - Dispositions
@@ -227,16 +232,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DispositionDto'
-
-    delete:
-      tags:
-        - Dispositions
-      operationId: deleteDisposition
-      parameters:
-        - $ref: '#/components/parameters/EmployeeCode'
-      responses:
-        '204':
-          description: The resource was deleted successfully.
 
   /api/v1/timeEntries:
     get:
@@ -336,19 +331,86 @@ paths:
         '204':
           description: The resource was deleted successfully.
 
+  /api/v1/schedule:
+    get:
+      tags:
+        - Schedule
+      operationId: getScheduleInPeriod
+      summary: Returns list of schedules
+      description: Returns list of schedules
+      parameters:
+        - in: query
+          required: true
+          name: from
+          schema:
+            type: string
+            format: date
+          description: From date
+        - in: query
+          required: true
+          name: to
+          schema:
+            type: string
+            format: date
+          description: To date
+      responses:
+        '200':
+          description: An array of schedule in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleDto'
+
+    post:
+      tags:
+        - Schedule
+      operationId: postScheduleInPeriod
+      summary: Returns list of schedules
+      description: Returns list of schedules
+      parameters:
+        - in: query
+          required: true
+          name: from
+          schema:
+            type: string
+            format: date
+          description: From date
+        - in: query
+          required: true
+          name: to
+          schema:
+            type: string
+            format: date
+          description: To date
+      responses:
+        '200':
+          description: An array of schedule in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleDto'
+
 components:
   schemas:
     AuthenticationToken:
       type: object
       properties:
-        login:
+        email:
           type: string
         token:
+          type: string
+        employeeCode:
+          type: string
+        role:
           type: string
     UserCredentials:
       type: object
       properties:
-        username:
+        email:
           type: string
         password:
           type: string
@@ -405,7 +467,6 @@ components:
       properties:
         id:
           type: string
-          format: uuid
         day:
           type: string
           format: date
@@ -438,12 +499,25 @@ components:
           type: string
         employeeCode:
           type: string
+    ScheduleDto:
+      type: object
+      properties:
+        day:
+          type: string
+          format: date
+        errorMessage:
+          type: string
+        dispositionDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/DispositionDto'
 
     Role:
       type: string
       enum:
         - EMPLOYEE
-        - ADMIN
+        - MANAGER
+        - INTERNAL
 
   parameters:
     EmployeeCode:

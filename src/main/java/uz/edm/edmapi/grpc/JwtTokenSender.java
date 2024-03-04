@@ -5,12 +5,10 @@ import io.grpc.Metadata;
 import io.grpc.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import uz.edm.edmapi.constants.Constants;
-import uz.edm.edmapi.constants.Credentials;
+import uz.edm.edmapi.model.IndexerAuthTokenHolder;
 
 import java.util.concurrent.Executor;
-
 
 
 @Slf4j
@@ -22,7 +20,7 @@ public class JwtTokenSender extends CallCredentials {
         executor.execute(() -> {
             try {
                 Metadata headers = new Metadata();
-                headers.put(Constants.AUTHORIZATION, String.format("%s %s", Constants.BEARER, Credentials.jwtToken));
+                headers.put(Constants.CONST_AUTHORIZATION_METADATA, Constants.CONST_BEARER + IndexerAuthTokenHolder.jwtToken);
                 metadataApplier.apply(headers);
             } catch (Throwable e) {
                 metadataApplier.fail(Status.UNAUTHENTICATED.withCause(e));

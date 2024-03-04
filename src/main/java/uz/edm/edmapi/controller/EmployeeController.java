@@ -1,13 +1,13 @@
 package uz.edm.edmapi.controller;
 
 import com.edm.api.EmployeesApi;
-import uz.edm.edmapi.service.EmployeeService;
 import com.edm.model.dto.EmployeeDto;
 import com.edm.model.dto.EmployeeViewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import uz.edm.edmapi.service.EmployeeService;
 
 import java.util.List;
 

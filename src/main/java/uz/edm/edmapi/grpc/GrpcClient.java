@@ -3,12 +3,10 @@ package uz.edm.edmapi.grpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uz.edm.edmapi.Register;
 import uz.edm.grpc.authentication.AuthenticationServiceGrpc;
 import uz.edm.grpc.disposition.DispositionServiceGrpc;
 import uz.edm.grpc.employee.EmployeeServiceGrpc;

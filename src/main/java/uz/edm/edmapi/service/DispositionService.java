@@ -1,17 +1,6 @@
 package uz.edm.edmapi.service;
 
-import com.edm.model.dto.DispositionDto;
-import com.edm.model.dto.DispositionRatioDto;
-import uz.edm.grpc.disposition.CreateDispositionRequest;
-import uz.edm.grpc.disposition.DeleteDispositionsByIdRequest;
-import uz.edm.grpc.disposition.Disposition;
-import uz.edm.grpc.disposition.DispositionRatio;
-import uz.edm.grpc.disposition.DispositionRatioRequest;
-import uz.edm.grpc.disposition.DispositionServiceGrpc;
-import uz.edm.grpc.disposition.Dispositions;
-import uz.edm.grpc.disposition.GetAllDispositionRequest;
-import uz.edm.grpc.disposition.GetDispositionsByEmployeeCodeRequest;
-import uz.edm.grpc.disposition.UpdateDispositionRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -19,21 +8,22 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class DispositionService {
 
-    private final DispositionServiceGrpc.DispositionServiceBlockingStub dispositionServiceBlockingStub;
+    private final uz.edm.grpc.disposition.DispositionServiceGrpc.DispositionServiceBlockingStub dispositionServiceBlockingStub;
 
     public void deleteDisposition(String employeeCode) {
-        dispositionServiceBlockingStub.deleteDisposition(DeleteDispositionsByIdRequest.newBuilder().setId(employeeCode).build());
+        dispositionServiceBlockingStub.deleteDisposition(uz.edm.grpc.disposition.DeleteDispositionsByIdRequest.newBuilder().setId(employeeCode).build());
     }
 
 
-    public List<DispositionDto> dispositionsGet(LocalDate from, LocalDate to) {
-        Dispositions dispositions = dispositionServiceBlockingStub.getAllDisposition(
-                GetAllDispositionRequest
+    public List<com.edm.model.dto.DispositionDto> dispositionsGet(LocalDate from, LocalDate to) {
+        uz.edm.grpc.disposition.Dispositions dispositions = dispositionServiceBlockingStub.getAllDisposition(
+                uz.edm.grpc.disposition.GetAllDispositionRequest
                         .newBuilder().
                         setFrom(from.toString())
                         .setTo(to.toString())
@@ -42,37 +32,44 @@ public class DispositionService {
     }
 
 
-    public DispositionDto dispositionsPost(DispositionDto dispositionDto) {
-        Disposition disposition = dispositionServiceBlockingStub.createDisposition(CreateDispositionRequest.newBuilder().setDisposition(dispositionDtoToGrpcFormat(dispositionDto)).build());
+    public com.edm.model.dto.DispositionDto dispositionsPost(com.edm.model.dto.DispositionDto dispositionDto) {
+        uz.edm.grpc.disposition.Disposition disposition = dispositionServiceBlockingStub.createDisposition(uz.edm.grpc.disposition.CreateDispositionRequest.newBuilder().setDisposition(dispositionDtoToGrpcFormat(dispositionDto)).build());
         return mapDispositionToDto(disposition);
     }
 
 
-    public List<DispositionDto> getDispositionsByEmployeeCode(String employeeCode, LocalDate from, LocalDate to) {
-        Dispositions dispositions = dispositionServiceBlockingStub.getDispositionsByEmployeeCode(GetDispositionsByEmployeeCodeRequest.newBuilder().setEmployeeCode(employeeCode).setStart(from.toString()).setStop(to.toString()).build());
+    public List<com.edm.model.dto.DispositionDto> getDispositionsByEmployeeCode(String employeeCode, LocalDate from, LocalDate to) {
+        uz.edm.grpc.disposition.Dispositions dispositions = dispositionServiceBlockingStub.getDispositionsByEmployeeCode(uz.edm.grpc.disposition.GetDispositionsByEmployeeCodeRequest.newBuilder().setEmployeeCode(employeeCode).setStart(from.toString()).setStop(to.toString()).build());
         return mapDispositionsToDto(dispositions);
     }
 
 
-    public DispositionDto updateDisposition(String employeeCode, DispositionDto dispositionDto) {
-        Disposition disposition = dispositionServiceBlockingStub.updateDisposition(UpdateDispositionRequest.newBuilder().setEmployeeCode(employeeCode).setDisposition(dispositionDtoToGrpcFormat(dispositionDto)).build());
+    public com.edm.model.dto.DispositionDto updateDisposition(String employeeCode, com.edm.model.dto.DispositionDto dispositionDto) {
+        uz.edm.grpc.disposition.Disposition disposition = dispositionServiceBlockingStub.updateDisposition(uz.edm.grpc.disposition.UpdateDispositionRequest.newBuilder().setEmployeeCode(employeeCode).setDisposition(dispositionDtoToGrpcFormat(dispositionDto)).build());
         return mapDispositionToDto(disposition);
     }
 
-    public DispositionRatioDto dispositionRatioDtoGet(String employeeCode) {
-        DispositionRatio dispositionRatio = dispositionServiceBlockingStub.getDispositionRatio(DispositionRatioRequest.newBuilder().setEmployeeCode(employeeCode).build());
+    public com.edm.model.dto.DispositionRatioDto dispositionRatioDtoGet(String employeeCode) {
+        uz.edm.grpc.disposition.DispositionRatio dispositionRatio = dispositionServiceBlockingStub.getDispositionRatio(uz.edm.grpc.disposition.DispositionRatioRequest.newBuilder().setEmployeeCode(employeeCode).build());
         return mapDispositionRatioToDto(dispositionRatio);
     }
 
-    private Dispositions dispositionsDtoToGrpcFormat(List<DispositionDto> dispositionDtos) {
-        List<Disposition> collect = dispositionDtos.stream()
+    private uz.edm.grpc.disposition.Dispositions dispositionsDtoToGrpcFormat(List<com.edm.model.dto.DispositionDto> dispositionDtos) {
+        List<uz.edm.grpc.disposition.Disposition> collect = dispositionDtos.stream()
                 .map(this::dispositionDtoToGrpcFormat)
                 .toList();
-        return Dispositions.newBuilder().addAllDisposition(collect).build();
+        return uz.edm.grpc.disposition.Dispositions.newBuilder().addAllDisposition(collect).build();
     }
 
-    private Disposition dispositionDtoToGrpcFormat(DispositionDto dispositionDto) {
-        return Disposition.newBuilder()
+    private uz.edm.grpc.disposition.Disposition dispositionDtoToGrpcFormat(com.edm.model.dto.DispositionDto dispositionDto) {
+        String id = "";
+
+        if (Objects.nonNull(dispositionDto.getId())) {
+            id = dispositionDto.getId();
+        }
+
+        return uz.edm.grpc.disposition.Disposition.newBuilder()
+                .setId(id)
                 .setDay(dispositionDto.getDay().toString())
                 .setStart(dispositionDto.getStart())
                 .setStop(dispositionDto.getStop())
@@ -80,10 +77,11 @@ public class DispositionService {
                 .build();
     }
 
-    private DispositionDto mapDispositionToDto(Disposition disposition) {
+    private com.edm.model.dto.DispositionDto mapDispositionToDto(uz.edm.grpc.disposition.Disposition disposition) {
         DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         org.joda.time.LocalDate localDate = timeFormatter.parseLocalDate(disposition.getDay());
-        DispositionDto dispositionDto = new DispositionDto();
+        com.edm.model.dto.DispositionDto dispositionDto = new com.edm.model.dto.DispositionDto();
+        dispositionDto.setId(disposition.getId());
         dispositionDto.setDay(java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth()));
         dispositionDto.setStart(disposition.getStart());
         dispositionDto.stop(disposition.getStop());
@@ -91,15 +89,15 @@ public class DispositionService {
         return dispositionDto;
     }
 
-    private List<DispositionDto> mapDispositionsToDto(Dispositions dispositions) {
+    private List<com.edm.model.dto.DispositionDto> mapDispositionsToDto(uz.edm.grpc.disposition.Dispositions dispositions) {
         return dispositions.getDispositionList()
                 .stream()
                 .map(this::mapDispositionToDto)
                 .toList();
     }
 
-    private DispositionRatioDto mapDispositionRatioToDto(DispositionRatio dispositionRatio) {
-        DispositionRatioDto dispositionRatioDto = new DispositionRatioDto();
+    private com.edm.model.dto.DispositionRatioDto mapDispositionRatioToDto(uz.edm.grpc.disposition.DispositionRatio dispositionRatio) {
+        com.edm.model.dto.DispositionRatioDto dispositionRatioDto = new com.edm.model.dto.DispositionRatioDto();
         dispositionRatioDto.setRatio(dispositionRatio.getWorkingDispositionRatio());
         dispositionRatioDto.setEmployeeCode(dispositionRatio.getEmployeeCode());
         return dispositionRatioDto;

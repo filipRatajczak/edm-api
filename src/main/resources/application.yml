@@ -5,17 +5,20 @@ spring:
      name: edm-api
 edm:
   jwt:
-    secret: asdfasdfasdfasdfasdfasdfasdfasdf
-    expiration: 100000000000
+    secret: NAhospQgZJWzJwf4tVX3Ig8G04v1tKX5
+    expiration: 3600000
   api:
     credentials:
-      username: EDM-API@EDM.COM
+      email: EDM-API@EDM.COM
       password: EDM-API111
-
+  core:
+    url: http://localhost:8082
 grpc:
   indexer:
     host: localhost
     port: 8136
+
+
 
 
 

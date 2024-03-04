@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -28,7 +27,7 @@ public class JwtUtilities {
     @Value("${edm.jwt.expiration}")
     private Long jwtExpiration;
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, DecodedJWT::getSubject);
     }
 
@@ -39,19 +38,6 @@ public class JwtUtilities {
     public <T> T extractClaim(String token, Function<DecodedJWT, T> claimsResolver) {
         final DecodedJWT decodedJWT = extractAllClaims(token);
         return claimsResolver.apply(decodedJWT);
-    }
-
-    public Date extractExpiration(String token) {
-        return extractClaim(token, DecodedJWT::getExpiresAt);
-    }
-
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractUsername(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    public boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
     }
 
     public String generateToken(String email, List<String> roles) {
@@ -67,6 +53,7 @@ public class JwtUtilities {
 
     public boolean validateToken(String token) {
         try {
+            System.out.println(token);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWT.require(algorithm).build().verify(token);
             return true;

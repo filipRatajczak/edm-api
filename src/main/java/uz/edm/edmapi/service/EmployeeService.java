@@ -5,6 +5,7 @@ import com.edm.model.dto.EmployeeDto;
 import com.edm.model.dto.EmployeeViewDto;
 import com.edm.model.dto.Role;
 import com.google.protobuf.Empty;
+import lombok.extern.slf4j.Slf4j;
 import uz.edm.grpc.employee.CreateEmployeeRequest;
 import uz.edm.grpc.employee.DeleteEmployeeRequest;
 import uz.edm.grpc.employee.Employee;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class EmployeeService {
 
     private final EmployeeServiceGrpc.EmployeeServiceBlockingStub employeeServiceBlockingStub;
@@ -66,6 +68,7 @@ public class EmployeeService {
     }
 
     private Employee employeeToGrpcFormat(EmployeeDto employeeDto) {
+        log.info(employeeDto.toString());
         return Employee.newBuilder()
                 .setFirstName(employeeDto.getFirstName())
                 .setLastName(employeeDto.getLastName())
@@ -74,7 +77,7 @@ public class EmployeeService {
                 .setEmail(employeeDto.getEmail())
                 .setEmployeeCode(employeeDto.getEmployeeCode())
                 .setPhoneNumber(employeeDto.getPhoneNumber())
-                .setRole(employeeDto.getRole().name())
+                .setRole(String.valueOf(Role.EMPLOYEE))
                 .setPassword(employeeDto.getPassword())
                 .build();
     }
@@ -96,7 +99,7 @@ public class EmployeeService {
     }
 
     private EmployeeViewDto mapEmployeeToViewDto(Employee employee) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate localDate = timeFormatter.parseLocalDate(employee.getBirthday());
         EmployeeViewDto employeeViewDto = new EmployeeViewDto();
         employeeViewDto.setFirstName(employee.getFirstName());
